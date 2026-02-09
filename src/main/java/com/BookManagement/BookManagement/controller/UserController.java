@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class UserController {
+public class    UserController {
 
     @Autowired
     private UserService service;
@@ -37,13 +37,13 @@ public class UserController {
     public ResponseEntity<ApiResponse<User>> login(@RequestBody User user, HttpSession session) {
         try {
             User dbUser = service.login(user.getUsername(), user.getPassword());
-
             if (dbUser == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(new ApiResponse<>("Invalid Credentials / Register First", null));
             }
 
             session.setAttribute("USER_ID", dbUser.getId());
+            session.setAttribute("USERNAME", dbUser.getUsername());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse<>("Login Successful", dbUser));

@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.PrePersist;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -29,11 +32,8 @@ public class Book {
 
     @Column(name="is_deleted")
     private Boolean isDeleted = false;
-
+    @Column(name = "user_id")
     private Long userId;
-
-//Cannot use isbn auto generation in construction bcoz, hibernate sometime miss th constructor,
-    //first it will load entity, so there is chances of error
 
     public long getId() {
         return id;

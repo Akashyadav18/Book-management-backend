@@ -55,7 +55,7 @@ public class Controller {
             List<Book> books = bookService.getAllBooks();
             if(books.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)//204
-                        .body(new ApiResponse<>("NO Book Found", null));
+                         .body(new ApiResponse<>("NO Book Found", null));
             }
             return new ResponseEntity<>(books, HttpStatus.OK);//200
         }catch (Exception e){

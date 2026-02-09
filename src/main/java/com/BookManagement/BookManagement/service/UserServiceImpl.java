@@ -21,10 +21,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User login(String username, String password) {
-        User user = userRepo.findByUsername(username);
-        if(user == null || !user.getPassword().equals(password)){
-            throw new RuntimeException("Wrong Username or password");
+
+        User loginUser = userRepo.findByUsernameAndPassword(username, password)
+                .orElseThrow(() -> new RuntimeException("User and password not found"));
+        if(!loginUser.getPassword().equals(password)){
+            throw new RuntimeException("Invalid UserName or Password");
         }
-        return userRepo.findByUsernameAndPassword(username, password);
+        return loginUser;
     }
 }

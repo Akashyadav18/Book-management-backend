@@ -2,14 +2,16 @@ package com.BookManagement.BookManagement.service;
 
 import com.BookManagement.BookManagement.entity.Book;
 import com.BookManagement.BookManagement.repository.BookRepository;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class BookServiceImpl implements BookService{
     @Autowired
     BookRepository bookRepository;
@@ -25,6 +27,8 @@ public class BookServiceImpl implements BookService{
     public List<Book> getAllBooks() {
         return bookRepository.findByIsDeletedFalse();
     }
+
+
 
     @Override
     public Book getBookBYId(Long id) {
