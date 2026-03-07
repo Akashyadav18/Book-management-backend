@@ -2,9 +2,14 @@ package com.BookManagement.BookManagement.service;
 
 import com.BookManagement.BookManagement.entity.Book;
 import com.BookManagement.BookManagement.repository.BookRepository;
+import com.BookManagement.BookManagement.specification.BookSpecification;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +29,11 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findByIsDeletedFalse();
+    public Page<Book> getAllBooks(Pageable pageable, String search) {
+        if(search == null || search.isEmpty()){
+            return bookRepository.findByIsDeletedFalse( pageable);
+        }
+        return bookRepository.findByTitleAndIsDeletedFalse(search, pageable);
     }
 
 

@@ -5,6 +5,9 @@ import com.BookManagement.BookManagement.entity.Book;
 import com.BookManagement.BookManagement.service.BookService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +21,6 @@ public class Controller {
 
     @Autowired
     BookService bookService;
-
-//    @PostMapping("/createBook")
-//    public ResponseEntity<?> createBooks(@RequestBody Book book){
-//        try {
-//            Book saveBooks = bookService.createBooks(book);
-//            return new ResponseEntity<>(saveBooks, HttpStatus.CREATED);//201
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Fail to create Book", HttpStatus.INTERNAL_SERVER_ERROR);//500
-//        }
-//    }
 
     @PostMapping("/createBook")
     public ResponseEntity<ApiResponse<Book>> createBooks(@RequestBody Book book, HttpSession session) {
@@ -49,13 +42,39 @@ public class Controller {
 
 //while create and get all data, operation can fail due to many reasons -> DB conn issues,
     //unexpected sys issues i.e Exception
+//    @GetMapping("/getAllBooks")
+//    public ResponseEntity<?> getAllBooks(){
+//        try{
+//            List<Book> books = bookService.getAllBooks();
+//            if(books.isEmpty()){
+//                return ResponseEntity.status(HttpStatus.NO_CONTENT)//204
+//                         .body(new ApiResponse<>("NO Book Found", null));
+//            }
+//            return new ResponseEntity<>(books, HttpStatus.OK);//200
+//        }catch (Exception e){
+//            return new ResponseEntity<>("Error while fetching book", HttpStatus.INTERNAL_SERVER_ERROR);//500
+//        }
+//    }
     @GetMapping("/getAllBooks")
-    public ResponseEntity<?> getAllBooks(){
+    public ResponseEntity<?> getAllBooks(
+            @RequestParam(defaultValue = "1", required = false) int pageNo,
+            @RequestParam(defaultValue = "5", required = false) int pageSize,
+            @RequestParam(defaultValue = "id", required = false) String sortBy,
+            @RequestParam(defaultValue = "ASC", required = false) String sortDir,
+            @RequestParam(required = false) String search
+    ){
         try{
-            List<Book> books = bookService.getAllBooks();
+            Sort sort = null;
+            if(sortDir.equalsIgnoreCase("ASC")){
+                sort = Sort.by(sortBy).ascending();
+            }
+            else {
+                sort = Sort.by(sortBy).descending();
+            }
+            Page<Book> books = bookService.getAllBooks(PageRequest.of(pageNo -1, pageSize, sort), search);
             if(books.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)//204
-                         .body(new ApiResponse<>("NO Book Found", null));
+                        .body(new ApiResponse<>("NO Book Found", null));
             }
             return new ResponseEntity<>(books, HttpStatus.OK);//200
         }catch (Exception e){
