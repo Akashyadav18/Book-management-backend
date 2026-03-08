@@ -11,10 +11,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
     //select * from book where is_deleted = false
-    Page<Book> findByIsDeletedFalse(Pageable pageable);
-    Page<Book> findByTitleAndIsDeletedFalse(String title, Pageable pageable);
+//    Page<Book> findByIsDeletedFalse(Pageable pageable);
+
     // Auth
     //select * from book where id=? and is_deleted=false
     Optional<Book> findByIdAndIsDeletedFalse(Long id);

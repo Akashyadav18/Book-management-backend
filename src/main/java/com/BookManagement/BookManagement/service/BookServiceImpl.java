@@ -30,10 +30,10 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Page<Book> getAllBooks(Pageable pageable, String search) {
-        if(search == null || search.isEmpty()){
-            return bookRepository.findByIsDeletedFalse( pageable);
-        }
-        return bookRepository.findByTitleAndIsDeletedFalse(search, pageable);
+        Specification<Book> spec = BookSpecification.getSpecification(search);
+        return bookRepository.findAll(spec, pageable);
+//        specification shirf findAll method ko accept karta h
+//        return bookRepository.findByIsDeletedFalse(pageable);
     }
 
 
