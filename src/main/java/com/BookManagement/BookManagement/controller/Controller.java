@@ -3,6 +3,7 @@ package com.BookManagement.BookManagement.controller;
 import com.BookManagement.BookManagement.apiResponse.ApiResponse;
 import com.BookManagement.BookManagement.entity.Book;
 import com.BookManagement.BookManagement.service.BookService;
+import jakarta.persistence.Column;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,10 @@ public class Controller {
             @RequestParam(defaultValue = "5", required = false) int pageSize,
             @RequestParam(defaultValue = "id", required = false) String sortBy,
             @RequestParam(defaultValue = "ASC", required = false) String sortDir,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Integer publicationYear
     ){
         try{
             Sort sort = null;
@@ -71,7 +75,7 @@ public class Controller {
             else {
                 sort = Sort.by(sortBy).descending();
             }
-            Page<Book> books = bookService.getAllBooks(PageRequest.of(pageNo -1, pageSize, sort), search);
+            Page<Book> books = bookService.getAllBooks(PageRequest.of(pageNo -1, pageSize, sort), title, author, category, publicationYear);
             if(books.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NO_CONTENT)//204
                         .body(new ApiResponse<>("NO Book Found", null));

@@ -29,8 +29,8 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Page<Book> getAllBooks(Pageable pageable, String search) {
-        Specification<Book> spec = BookSpecification.getSpecification(search);
+    public Page<Book> getAllBooks(Pageable pageable, String title, String author,String category, Integer publicationYear) {
+        Specification<Book> spec = BookSpecification.getSpecification(title, author, category, publicationYear);
         return bookRepository.findAll(spec, pageable);
 //        specification shirf findAll method ko accept karta h
 //        return bookRepository.findByIsDeletedFalse(pageable);

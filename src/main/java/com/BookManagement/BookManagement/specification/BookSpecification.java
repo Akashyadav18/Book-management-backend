@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookSpecification {
-    public static Specification<Book> getSpecification(String search){
+    public static Specification<Book> getSpecification(String title, String author,String category, Integer publicationYear){
 //        normal specification without is deleted false
 
 //        return new Specification<Book>() {
@@ -62,25 +62,30 @@ public class BookSpecification {
             @Override
             public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
-                if(search == null || search.isEmpty()){
-                    return cb.conjunction(); //don't apply any filter.
-                }
-
                 List<Predicate> predicates = new ArrayList<>();
 
                 // Condition 1: hamesha isDeleted = false lagao
                 predicates.add(cb.equal(root.get("isDeleted"), false));
 
                 // Condition 2: search null nahi hai toh filter lagao
-                if (search != null && !search.trim().isEmpty()) {
-
-                    List<Predicate> searchPredicates = new ArrayList<>();
-
-                    searchPredicates.add(cb.like(cb.lower(root.get("title")), "%" + search.toLowerCase() + "%"));
-                    searchPredicates.add(cb.like(cb.lower(root.get("author")), "%" + search.toLowerCase() + "%"));
-
+                if(title !=null || author!=null ) {
+                        Predicate titlePredicate = cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
+                        Predicate authorPredicate = cb.like(cb.lower(root.get("author")), "%" + author.toLowerCase() + "%");
                     // title OR author — kisi ek mein mile toh chalega
-                    predicates.add(cb.or(searchPredicates.toArray(new Predicate[0])));
+                    predicates.add(cb.or(titlePredicate, authorPredicate));
+                }
+
+                // Condition 3: Category filter — AND kyunki exact select kiya hai
+                if (category != null && !category.trim().isEmpty()) {
+                    predicates.add(cb.equal(
+                            cb.lower(root.get("category")),
+                            category.toLowerCase()
+                    ));
+                }
+
+                // Condition 4: Publication Year filter — AND kyunki exact select kiya hai
+                if (publicationYear != null) {
+                    predicates.add(cb.equal(root.get("publicationYear"), publicationYear));
                 }
 
                 // sab conditions AND se join karo

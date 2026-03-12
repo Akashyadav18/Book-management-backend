@@ -11,7 +11,7 @@ public interface BookService {
 
     Book createBooks(Book book);
 
-    Page<Book> getAllBooks(Pageable pageable, String search);
+    Page<Book> getAllBooks(Pageable pageable, String title, String author,String category, Integer publicationYear);
 
     Book getBookBYId(Long id);
 
