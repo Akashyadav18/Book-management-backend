@@ -4,6 +4,7 @@ import com.BookManagement.BookManagement.apiResponse.ApiResponse;
 import com.BookManagement.BookManagement.entity.Book;
 import com.BookManagement.BookManagement.service.BookService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class Controller {
 //    }
 
     @PostMapping("/createBook")
-    public ResponseEntity<ApiResponse<Book>> createBooks(@RequestBody Book book, HttpSession session) {
+    public ResponseEntity<ApiResponse<Book>> createBooks(@RequestBody @Valid Book book, HttpSession session) {
     try {
         Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {

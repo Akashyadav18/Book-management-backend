@@ -1,6 +1,8 @@
 package com.BookManagement.BookManagement.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +20,10 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotBlank(message = "Title cannot be blank")
     @Column(length = 50)
     private String title;
+    @NotEmpty(message = "Author cannot be empty")
     @Column(length = 50)
     private String author;
     @Column(unique = true, nullable = false, length = 20)

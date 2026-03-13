@@ -4,6 +4,7 @@ import com.BookManagement.BookManagement.apiResponse.ApiResponse;
 import com.BookManagement.BookManagement.entity.User;
 import com.BookManagement.BookManagement.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class    UserController {
     private UserService service;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<User>> register(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<User>> register(@RequestBody @Valid User user) {
         try {
             User saveUser = service.register(user);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -34,7 +35,7 @@ public class    UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<User>> login(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<ApiResponse<User>> login(@RequestBody @Valid User user, HttpSession session) {
         try {
             User dbUser = service.login(user.getUsername(), user.getPassword());
             if (dbUser == null) {
